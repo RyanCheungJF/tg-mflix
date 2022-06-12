@@ -1,0 +1,28 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.tigergraph'
+version = ''
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.6.2'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.5.3'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.2'
+	implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '2.7.0'
+	implementation 'com.tigergraph:tigergraph-jdbc-driver:1.2.5'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

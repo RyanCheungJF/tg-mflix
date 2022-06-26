@@ -1,7 +1,6 @@
 package com.tigergraph.tg.util;
 
 import com.tigergraph.tg.connection.TigerGraphConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -9,14 +8,15 @@ import java.sql.SQLException;
 @Component
 public class StatementUtil {
 
-    @Autowired
-    TigerGraphConfig cfg;
+    private final TigerGraphConfig tgCfg;
 
-    public StatementUtil() {}
+    public StatementUtil(TigerGraphConfig tgCfg) {
+        this.tgCfg = tgCfg;
+    }
 
     public java.sql.PreparedStatement prepareStatement(String query) {
         try {
-            return cfg.provideConnection().prepareStatement(query);
+            return tgCfg.provideConnection().prepareStatement(query);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;

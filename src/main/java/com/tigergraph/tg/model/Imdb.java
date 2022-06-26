@@ -1,5 +1,10 @@
 package com.tigergraph.tg.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Imdb {
 
     private final String type;
@@ -12,21 +17,5 @@ public class Imdb {
         this.id = id;
         this.rating = rating;
         this.votes = votes;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public Integer getVotes() {
-        return votes;
     }
 }

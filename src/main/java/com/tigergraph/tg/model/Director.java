@@ -1,5 +1,10 @@
 package com.tigergraph.tg.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Director {
 
     private final String type;
@@ -8,13 +13,5 @@ public class Director {
     public Director(String name) {
         this.type = "director";
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
     }
 }

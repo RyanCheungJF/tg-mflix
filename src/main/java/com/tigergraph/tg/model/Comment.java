@@ -1,5 +1,10 @@
 package com.tigergraph.tg.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Comment {
 
     private final String type;
@@ -14,25 +19,5 @@ public class Comment {
         this.email = email;
         this.movie_id = movie_id;
         this.text = text;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getMovie_id() {
-        return movie_id;
-    }
-
-    public String getText() {
-        return text;
     }
 }

@@ -1,21 +1,22 @@
 package com.tigergraph.tg.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tigergraph.tg.model.Award;
 import com.tigergraph.tg.model.Movie;
 import com.tigergraph.tg.repository.AwardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tigergraph.tg.util.AwardUtil;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Service
 public class AwardService {
 
-    @Autowired
-    private AwardRepository awardRepository;
+    private final AwardRepository awardRepository;
+
+    public AwardService(AwardRepository awardRepository) {
+        this.awardRepository = awardRepository;
+    }
 
     /**
      * Gets rid of single quotations and replaces them with double
@@ -28,13 +29,16 @@ public class AwardService {
         return trim.replace('\'', '"');
     }
 
-    public static Award reconstructAward(Movie m) throws SQLException {
-        try {
-            // only movie objects are passed in
-            String json = m.getAwards();
-            return new ObjectMapper().readerFor(Award.class).readValue(AwardService.processJson(json));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    public static Optional<Award> extractAwardFromMovie(Movie movie) {
+        // some movies do not have awards -> are marked with 'NA' as a default value
+        if (movie.equals(null) || movie.getAwards().equals("NA")) {
+            return Optional.empty();
         }
+        try {
+            return Optional.of(AwardUtil.reconstructAward(movie));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

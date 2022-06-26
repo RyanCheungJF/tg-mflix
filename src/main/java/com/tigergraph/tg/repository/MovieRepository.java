@@ -1,11 +1,9 @@
 package com.tigergraph.tg.repository;
 
-import com.tigergraph.tg.model.Award;
 import com.tigergraph.tg.model.Movie;
-import com.tigergraph.tg.service.AwardService;
-import com.tigergraph.tg.service.MovieService;
+import com.tigergraph.tg.util.MovieUtil;
+import com.tigergraph.tg.util.ParameterUtil;
 import com.tigergraph.tg.util.StatementUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -16,10 +14,12 @@ import java.util.Optional;
 @Repository
 public class MovieRepository implements TigerGraphRepository<Movie, String> {
 
-    @Autowired
-    StatementUtil stmtUtil;
-
     private final String INTERPRETED = "run interpreted(u=?)";
+    private final StatementUtil stmtUtil;
+
+    public MovieRepository(StatementUtil stmtUtil) {
+        this.stmtUtil = stmtUtil;
+    }
 
     public Optional<Movie> getMovie(String id) {
         String query = "GET Movie(id=?)";
@@ -27,7 +27,7 @@ public class MovieRepository implements TigerGraphRepository<Movie, String> {
             stmt.setString(1, id);
             java.sql.ResultSet rs = stmt.executeQuery();
             rs.next();
-            return Optional.of(MovieService.reconstructMovie(rs));
+            return Optional.of(MovieUtil.reconstructMovie(rs));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -37,7 +37,7 @@ public class MovieRepository implements TigerGraphRepository<Movie, String> {
     public Optional<List<Movie>> getByTitle(String phrase) {
         String queryBody = "INTERPRET QUERY () FOR GRAPH internship {\n"
             + "Movies = {Movie.*};\n"
-            + "result = SELECT m FROM Movie:m WHERE m.title LIKE \"%" + phrase + "%\";\n"
+            + "result = SELECT m FROM Movie:m WHERE m.title LIKE \"%" + ParameterUtil.decodeParameter(phrase) + "%\";\n"
             + "PRINT result;\n"
             + "}\n";
         try (java.sql.PreparedStatement stmt = stmtUtil.prepareStatement(INTERPRETED)) {
@@ -45,11 +45,9 @@ public class MovieRepository implements TigerGraphRepository<Movie, String> {
             stmt.setString(2, queryBody); // The query body is passed as a parameter.
             try (java.sql.ResultSet rs = stmt.executeQuery()) {
                 ArrayList<Movie> result = new ArrayList<>();
-                do {
-                    while (rs.next()) {
-                        result.add(MovieService.reconstructMovie(rs));
-                    }
-                } while (!rs.isLast());
+                while (rs.next()) {
+                    result.add(MovieUtil.reconstructMovie(rs));
+                }
                 return Optional.of(result);
             }
         } catch (SQLException throwables) {
@@ -58,14 +56,22 @@ public class MovieRepository implements TigerGraphRepository<Movie, String> {
         return Optional.empty();
     }
 
-    public Optional<Award> getAward(String id) {
-        Movie m = getMovie(id).orElse(null);
-        // some movies do not have awards -> are marked with 'NA' as a default value
-        if (m.equals(null) || m.getAwards().equals("NA")) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of(AwardService.reconstructAward(m));
+    public Optional<List<Movie>> getByScore(Double score) {
+        String queryBody = "INTERPRET QUERY (DOUBLE s) FOR GRAPH internship {\n"
+            + "Movies = {Movie.*};\n"
+            + "result = SELECT t FROM Movies -(Rated_As>)- Imdb:i -(reverse_Rated_As>) - Movie:t WHERE i.rating >= s;\n"
+            + "PRINT result;\n"
+            + "}\n";
+        try (java.sql.PreparedStatement stmt = stmtUtil.prepareStatement(INTERPRETED)) {
+            stmt.setString(1, String.valueOf(score));
+            stmt.setString(2, queryBody); // The query body is passed as a parameter.
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                ArrayList<Movie> result = new ArrayList<>();
+                while (rs.next()) {
+                    result.add(MovieUtil.reconstructMovie(rs));
+                }
+                return Optional.of(result);
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -1,19 +1,20 @@
 package com.tigergraph.tg.service;
 
-import com.tigergraph.tg.model.Cast;
-import com.tigergraph.tg.repository.CastRespository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tigergraph.tg.repository.CastRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class CastService {
 
-    @Autowired
-    private CastRespository castRespository;
+    private final CastRepository castRepository;
 
-    public static Cast reconstructCast(java.sql.ResultSet rs) throws SQLException {
-        return new Cast(rs.getString(1));
+    public CastService(CastRepository castRepository) {
+        this.castRepository = castRepository;
+    }
+
+    public List<Object> getNearbyCastMembers(String id) {
+        return castRepository.getNearbyCastMembers(id).orElse(null);
     }
 }

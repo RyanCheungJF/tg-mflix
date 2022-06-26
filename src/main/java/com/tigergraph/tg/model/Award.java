@@ -2,45 +2,25 @@ package com.tigergraph.tg.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * For Jackson classes, annotations are needed and getter setters for Jackson to set attributes
  */
+@Getter
+@Setter
 public class Award {
 
-    private Integer awards;
+    private Integer awardsReceived;
     private Integer nominations;
     private String text;
 
     @JsonCreator
-    public Award (@JsonProperty("awards") Integer awards, @JsonProperty("nominations") Integer nominations,
+    public Award (@JsonProperty("awards") Integer awardsReceived, @JsonProperty("nominations") Integer nominations,
                   @JsonProperty("text") String text) {
-        this.awards = awards;
+        this.awardsReceived = awardsReceived;
         this.nominations = nominations;
-        this.text = text;
-    }
-
-    public Integer getAwards() {
-        return awards;
-    }
-
-    public Integer getNominations() {
-        return nominations;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setAwards(Integer awards) {
-        this.awards = awards;
-    }
-
-    public void setNominations(Integer nominations) {
-        this.nominations = nominations;
-    }
-
-    public void setText(String text) {
         this.text = text;
     }
 }

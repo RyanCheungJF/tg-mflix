@@ -2,8 +2,13 @@ package com.tigergraph.tg.controller;
 
 import com.tigergraph.tg.model.Comment;
 import com.tigergraph.tg.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +17,11 @@ import java.util.Map;
 @RestController
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     // crud for relationships
 
@@ -25,7 +33,7 @@ public class CommentController {
         return commentService.getComment(uid, mid);
     }
 
-    // simple POST
+    // simple POST, no UPDATE as tg treats them the same, as an 'UPSERT' query
     @PostMapping("/comment/{uid}/{mid}")
     public Comment addComment(@PathVariable("uid") String uid, @PathVariable("mid") String mid,
                               @RequestBody Comment newComment) {

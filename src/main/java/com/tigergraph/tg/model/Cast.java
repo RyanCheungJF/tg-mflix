@@ -1,5 +1,10 @@
 package com.tigergraph.tg.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Cast {
 
     private final String type;
@@ -8,13 +13,5 @@ public class Cast {
     public Cast(String name) {
         this.type = "cast";
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
     }
 }

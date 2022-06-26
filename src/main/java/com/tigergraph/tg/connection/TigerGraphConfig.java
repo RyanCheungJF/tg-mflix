@@ -1,49 +1,40 @@
 package com.tigergraph.tg.connection;
 
-import com.tigergraph.jdbc.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Properties;
 
-@Component
+@Configuration
 public class TigerGraphConfig {
 
-    @Value("${spring.datasource.ipAddr}")
-    private String ipAddr;
-    @Value("${spring.datasource.port}")
-    private String port;
-    @Value("${spring.datasource.username}")
-    private String username;
-    @Value("${spring.datasource.password}")
-    private String password;
-    @Value("${spring.datasource.graphName}")
-    private String graphName;
+    private final TigerGraphProperties tgProps;
 
-    public TigerGraphConfig() {}
+    public TigerGraphConfig(TigerGraphProperties tgProps) {
+        this.tgProps = tgProps;
+    }
 
+    @Bean
     public Connection provideConnection() throws SQLException {
-        Properties properties = new Properties();
+        HikariConfig config = new HikariConfig();
 
-        properties.put("username", username);
-        properties.put("password", password);
-        properties.put("graph", graphName);
+        config.setDriverClassName(tgProps.getDriver());
+        config.setUsername(tgProps.getUsername());
+        config.setPassword(tgProps.getPassword());
+        config.addDataSourceProperty("graph", tgProps.getGraphName());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("jdbc:tg:http://").append(ipAddr).append(":").append(port);
-
+        sb.append("jdbc:tg:http://").append(tgProps.getIpAddr()).append(":").append(tgProps.getPort());
+        config.setJdbcUrl(sb.toString());
         try {
-            com.tigergraph.jdbc.Driver driver = new Driver();
-            try {
-                return driver.connect(sb.toString(), properties);
-            } catch (NullPointerException | SQLException err) {
-                err.printStackTrace();
-            }
-        } catch (NullPointerException | SQLException err) {
-            err.printStackTrace();
+            HikariDataSource ds = new HikariDataSource(config);
+            return ds.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
-        throw new SQLException("Failed to initialize connection");
     }
 }

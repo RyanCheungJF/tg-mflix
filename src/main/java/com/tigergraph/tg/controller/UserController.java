@@ -3,7 +3,6 @@ package com.tigergraph.tg.controller;
 import com.tigergraph.tg.model.Comment;
 import com.tigergraph.tg.model.User;
 import com.tigergraph.tg.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -13,8 +12,11 @@ import java.util.Map;
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     // crud for vertex
 

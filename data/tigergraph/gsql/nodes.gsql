@@ -1,0 +1,49 @@
+CREATE VERTEX User (
+    PRIMARY_ID id STRING,
+    name STRING,
+    email STRING,
+    password STRING
+) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX Genre (
+    PRIMARY_ID name STRING
+) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX Writer (
+    PRIMARY_ID name STRING
+) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX Director (
+    PRIMARY_ID name STRING
+) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX Cast (
+    PRIMARY_ID name STRING
+) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX Imdb (
+    PRIMARY_ID id INT,
+    rating DOUBLE DEFAULT 0.0,
+    votes INT DEFAULT 0
+) WITH primary_id_as_attribute="true"
+
+CREATE VERTEX Movie (
+    PRIMARY_ID id STRING,
+    plot STRING DEFAULT "NA",
+    num_mflix_comments INT DEFAULT 0,
+    title STRING DEFAULT "NA",
+    awards STRING DEFAULT "NA",
+    lastUpdated STRING DEFAULT "NA",
+    tomatoes_meter INT DEFAULT 0,
+    tomatoes_rating DOUBLE DEFAULT 0.0,
+    tomatoes_numReviews INT DEFAULT 0
+) WITH primary_id_as_attribute="true"
+
+# gsql
+CREATE VERTEX User (PRIMARY_ID id STRING, name STRING, email STRING, password STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Genre (PRIMARY_ID name STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Writer (PRIMARY_ID name STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Director (PRIMARY_ID name STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Cast (PRIMARY_ID name STRING) WITH primary_id_as_attribute="true"
+CREATE VERTEX Imdb (PRIMARY_ID id INT, rating DOUBLE DEFAULT 0.0, votes INT DEFAULT 0) WITH primary_id_as_attribute="true"
+CREATE VERTEX Movie (PRIMARY_ID id STRING, plot STRING DEFAULT "NA", num_mflix_comments INT DEFAULT 0, title STRING DEFAULT "NA", awards STRING DEFAULT "NA", lastUpdated STRING DEFAULT "NA", tomatoes_meter INT DEFAULT 0, tomatoes_rating DOUBLE DEFAULT 0.0, tomatoes_numReviews INT DEFAULT 0) WITH primary_id_as_attribute="true"

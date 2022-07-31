@@ -1,0 +1,41 @@
+CREATE DIRECTED EDGE Categorized_As (
+    FROM Movie,
+    TO Genre
+) WITH REVERSE_EDGE = "reverse_Categorized_As"
+
+CREATE DIRECTED EDGE Directed_By (
+    FROM Movie,
+    To Director
+) WITH REVERSE_EDGE = "reverse_Directed_By"
+
+CREATE DIRECTED EDGE Written_By (
+    FROM Movie,
+    TO Writer
+) WITH REVERSE_EDGE = "reverse_Written_By"
+
+CREATE DIRECTED EDGE Casts (
+    FROM Movie, 
+    TO Cast
+) WITH REVERSE_EDGE = "reverse_Casts"
+
+CREATE DIRECTED EDGE Rated_As (
+    FROM Movie,
+    TO Imdb
+) WITH REVERSE_EDGE = "reverse_Rated_As"
+
+CREATE DIRECTED EDGE Comments_On (
+    FROM User,
+    TO Movie,
+    comment_id STRING,
+    email STRING,
+    movie_id STRING,
+    text STRING
+) WITH REVERSE_EDGE = "reverse_Comments_On"
+
+# gsql
+CREATE DIRECTED EDGE Categorized_As (FROM Movie, TO Genre) WITH REVERSE_EDGE = "reverse_Categorized_As"
+CREATE DIRECTED EDGE Directed_By (FROM Movie, To Director) WITH REVERSE_EDGE = "reverse_Directed_By"
+CREATE DIRECTED EDGE Written_By (FROM Movie, TO Writer) WITH REVERSE_EDGE = "reverse_Written_By"
+CREATE DIRECTED EDGE Casts (FROM Movie, TO Cast) WITH REVERSE_EDGE = "reverse_Casts"
+CREATE DIRECTED EDGE Rated_As (FROM Movie, TO Imdb) WITH REVERSE_EDGE = "reverse_Rated_As"
+CREATE DIRECTED EDGE Comments_On (FROM User, TO Movie, comment_id STRING, email STRING, movie_id STRING, text STRING) WITH REVERSE_EDGE = "reverse_Comments_On"

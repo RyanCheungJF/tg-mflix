@@ -1,0 +1,40 @@
+USE GRAPH mflix
+BEGIN
+CREATE LOADING JOB lj FOR GRAPH mflix {
+    // Reads linux path, so need to upload the relevant data files to the path
+    DEFINE FILENAME file1 = "/home/tigergraph/data/f_cast.csv";
+    DEFINE FILENAME file2 = "/home/tigergraph/data/f_comments_no_date_short.csv";
+    DEFINE FILENAME file3 = "/home/tigergraph/data/f_directors.csv";
+    DEFINE FILENAME file4 = "/home/tigergraph/data/f_genres.csv";
+    DEFINE FILENAME file5 = "/home/tigergraph/data/f_imdb.csv";
+    DEFINE FILENAME file6 = "/home/tigergraph/data/f_movies_no_date.csv";
+    DEFINE FILENAME file7 = "/home/tigergraph/data/f_users.csv";
+    DEFINE FILENAME file8 = "/home/tigergraph/data/f_writers.csv";
+
+    // nodes
+    // 4 nodes who have 1 attribute only
+    LOAD file1 TO VERTEX Cast VALUES ($1) USING header="true", separator=",";
+    LOAD file3 TO VERTEX Director VALUES ($1) USING header="true", separator=",";
+    LOAD file4 TO VERTEX Genre VALUES ($1) USING header="true", separator=",";
+    LOAD file8 TO VERTEX Writer VALUES ($1) USING header="true", separator=",";
+
+    // other more complex nodes
+    LOAD file7 TO VERTEX User VALUES ($0, $1, $2, $3) USING header="true", separator=",";
+    LOAD file5 TO VERTEX Imdb VALUES ($3, $1, $2) USING header="true", separator=",";
+    LOAD file6 TO VERTEX Movie VALUES ($0, $1, $5, $6, $11, $14, $22, $21, $20) USING header="true", separator=",", quote="double";
+
+    // edges
+    // edges for the 4 nodes with 1 attribute only
+    LOAD file1 TO EDGE Casts VALUES ($0, $1) USING header="true", separator=",";
+    LOAD file3 TO EDGE Directed_By VALUES ($0, $1) USING header="true", separator=",";
+    LOAD file4 TO EDGE Categorized_As VALUES ($0, $1) USING header="true", separator=",";
+    LOAD file8 to EDGE Written_By VALUES ($0, $1) USING header="true", separator=",";
+
+    // other more complex edges
+    LOAD file5 to EDGE Rated_As VALUES ($0, $3) USING header="true", separator=",";
+    LOAD file2 to EDGE Comments_On VALUES ($4, $2, $0, $1, $2, $3) USING header="true", separator=",";
+}
+END
+
+# Once done, run this
+RUN LOADING JOB lj
